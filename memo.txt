@@ -1,0 +1,13 @@
+
+docker-compose run web django-admin startproject studyproject .
+
+docker-compose up
+
+https://qiita.com/tsuboyataiki/items/90dbe94553d3dea39b19
+docker-compose exec web bash  
+
+python manage.py startapp readbook
+
+sudo chown -R $USER:$USER .
+
+
