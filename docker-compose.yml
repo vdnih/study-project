@@ -5,12 +5,29 @@ services:
     image: postgres
     environment:
       POSTGRES_HOST_AUTH_METHOD: 'trust'
+    volumes: 
+      - db-data:/var/lib/pgsql
   django:
-    build: .
-    command: python3 manage.py runserver 0.0.0.0:8000
+    build: ./django
+    command: uwsgi --socket :8001 --module mysite.wsgi --py-autoreload 1
     volumes:
-      - .:/mysite
+      - ./django:/mysite
     ports:
       - "8000:8000"
     depends_on:
       - db
+    expose: 
+      - '8001'
+  nginx:
+    image: nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/conf:/etc/nginx/conf.d
+      - ./nginx/uwsgi_params:/etc/nginx/uwsgi_params
+      - ./static:/static
+    depends_on:
+      - django
+
+volumes: 
+  db-data:
